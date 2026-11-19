@@ -1,81 +1,107 @@
-# SpringBoot 项目初始模板
+<div align="center">
 
-基于 Java SpringBoot 的项目初始模板，整合了常用框架和主流业务的示例代码。
+# 🚀 SpringBoot Init
 
-只需 1 分钟即可完成内容网站的后端！！！大家还可以在此基础上快速开发自己的项目。
+**A production-ready Spring Boot 2.7 backend template — clone it, replace a few configs, and your API is live in about a minute.**
 
-[toc]
+**English** | [简体中文](README.zh-CN.md)
 
-## 模板特点
+![Java](https://img.shields.io/badge/Java-8-orange?logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7.2-6DB33F?logo=springboot&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-5.7%2B-4479A1?logo=mysql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-session%20store-DC382D?logo=redis&logoColor=white)
+![Elasticsearch](https://img.shields.io/badge/Elasticsearch-7.x-06B8D4?logo=elasticsearch&logoColor=white)
+![Knife4j](https://img.shields.io/badge/API%20Docs-Knife4j-3.0.3-blue)
+![GitHub stars](https://img.shields.io/github/stars/Andrewlv/springboot-init?style=social)
 
-### 主流框架 & 特性
+</div>
 
-- Spring Boot 2.7.x（贼新）
-- Spring MVC
-- MyBatis + MyBatis Plus 数据访问（开启分页）
-- Spring Boot 调试工具和项目处理器
-- Spring AOP 切面编程
-- Spring Scheduler 定时任务
-- Spring 事务注解
+---
 
-### 数据存储
+## ✨ Features
 
-- MySQL 数据库
-- Redis 内存数据库
-- Elasticsearch 搜索引擎
-- 腾讯云 COS 对象存储
+**Everything you'd otherwise rebuild from scratch, already wired up:**
 
-### 工具类
+- 🔐 **Auth out of the box** — register / login / logout with Spring Session + Redis distributed sessions, a `@AuthCheck` role annotation (`user` / `admin` / `ban`) enforced by AOP, and WeChat Open Platform login
+- 📋 **Typical business CRUD** — a complete posts domain (create / update / delete / search) with likes (👍) and favorites (⭐), ready to copy for your own entities
+- 🔎 **Elasticsearch sync** — full and incremental scheduled jobs that mirror MySQL data into ES, plus flexible search endpoints
+- 📄 **Excel import/export** — EasyExcel integration with a working example
+- 📦 **File upload** — per-business uploads (validated by a `FileUploadBizEnum` whitelist) straight to Tencent Cloud COS
+- 💬 **WeChat Official Account** — subscribe events, message routing, and menu config via `wx-java`
+- 🛡️ **Engineering guardrails** — global exception handler, unified `BaseResponse` wrapper, custom error codes, global CORS, request logging AOP, and `Long → String` JSON serialization to prevent JS precision loss
+- 📖 **Live API docs** — Swagger 3 + Knife4j UI, debug every endpoint without a frontend
+- 🧪 **JUnit 5 test samples** — mapper, service, and manager examples showing how to test each layer
+- 🏷️ **`todo` markers everywhere** — every value you need to replace is tagged `todo` in `application.yml`, so onboarding is a guided search instead of a guessing game
 
-- Easy Excel 表格处理
-- Hutool 工具库
-- Gson 解析库
-- Apache Commons Lang3 工具类
-- Lombok 注解
+## 🧱 Tech Stack
 
-### 业务特性
+| Category | Technology |
+| --- | --- |
+| Framework | Spring Boot 2.7.2 · Spring MVC · Spring AOP · Spring Scheduler · Spring TX |
+| Data Access | MyBatis 2.2.2 · MyBatis-Plus 3.5.2 (pagination, logical delete) |
+| Database | MySQL |
+| Session / Cache | Redis · Spring Session Data Redis |
+| Search | Spring Data Elasticsearch |
+| Object Storage | Tencent Cloud COS (`cos_api` 5.6.x) |
+| API Docs | SpringDoc (Swagger 3) · Knife4j 3.0.3 |
+| WeChat | `wx-java-mp-spring-boot-starter` 4.4.0 (MP + Open Platform) |
+| Utilities | Hutool 5.8.8 · EasyExcel 3.1.1 · Gson 2.9.1 · Commons Lang3 · Lombok |
 
-- Spring Session Redis 分布式登录
-- 全局请求响应拦截器（记录日志）
-- 全局异常处理器
-- 自定义错误码
-- 封装通用响应类
-- Swagger + Knife4j 接口文档
-- 自定义权限注解 + 全局校验
-- 全局跨域处理
-- 长整数丢失精度解决
-- 多环境配置
+## 📂 Project Structure
 
+```
+springboot-init
+├── sql/                                  # create_table.sql · post_es_mapping.json
+├── Dockerfile                            # Multi-stage Maven build (prod profile)
+└── src/main
+    ├── java/com/yupi/springbootinit
+    │   ├── MainApplication.java          # Entry point
+    │   ├── annotation/                   # @AuthCheck — role guard
+    │   ├── aop/                          # AuthInterceptor · LogInterceptor
+    │   ├── common/                       # BaseResponse · ErrorCode · ResultUtils · PageRequest
+    │   ├── config/                       # CORS · Knife4j · MyBatis-Plus · COS · JSON · WeChat
+    │   ├── constant/                     # Common · File · User constants
+    │   ├── controller/                   # User · Post · PostThumb · PostFavour · File · WxMp
+    │   ├── esdao/                        # PostEsDao — Elasticsearch data access
+    │   ├── exception/                    # GlobalExceptionHandler · BusinessException · ThrowUtils
+    │   ├── job/
+    │   │   ├── once/FullSyncPostToEs     # One-shot full MySQL → ES sync
+    │   │   └── cycle/IncSyncPostToEs     # Scheduled incremental sync
+    │   ├── manager/                      # CosManager — file upload to COS
+    │   ├── mapper/                       # MyBatis mappers
+    │   ├── model/                        # DTOs · entities · enums · VOs
+    │   ├── service/                      # User · Post · PostThumb · PostFavour services
+    │   ├── utils/                        # Net · Sql · SpringContext utils
+    │   └── wxmp/                         # WeChat MP message router + handlers
+    └── resources
+        ├── application.yml               # Shared config (active profile: dev)
+        ├── application-{dev,test,prod}.yml
+        └── mapper/                       # MyBatis XML mappers
+```
 
-## 业务功能
+## 🚀 Quick Start
 
-- 提供示例 SQL（用户、帖子、帖子点赞、帖子收藏表）
-- 用户登录、注册、注销、更新、检索、权限管理
-- 帖子创建、删除、编辑、更新、数据库检索、ES 灵活检索
-- 帖子点赞、取消点赞
-- 帖子收藏、取消收藏、检索已收藏帖子
-- 帖子全量同步 ES、增量同步 ES 定时任务
-- 支持微信开放平台登录
-- 支持微信公众号订阅、收发消息、设置菜单
-- 支持分业务的文件上传
+### Prerequisites
 
-### 单元测试
+| Requirement | Version | Notes |
+| --- | --- | --- |
+| JDK | 8+ | `pom.xml` sets `java.version = 1.8` |
+| Maven | 3.6+ | Wrapper included — `./mvnw` works standalone |
+| MySQL | 5.7+ | Required |
+| Redis | 6+ | Optional — enables distributed login |
+| Elasticsearch | 7.x | Optional — enables post search |
 
-- JUnit5 单元测试
-- 示例单元测试类
+### 1. Create the database
 
-### 架构设计
+The script creates the `my_db` database and four tables — `user`, `post`, `post_thumb`, `post_favour`:
 
-- 合理分层
+```bash
+mysql -u root -p < sql/create_table.sql
+```
 
+### 2. Point the app at your database
 
-## 快速上手
-
-> 所有需要修改的地方鱼皮都标记了 `todo`，便于大家找到修改的位置~
-
-### MySQL 数据库
-
-1）修改 `application.yml` 的数据库配置为你自己的：
+In `src/main/resources/application.yml`, replace the values marked `todo`:
 
 ```yml
 spring:
@@ -86,77 +112,129 @@ spring:
     password: 123456
 ```
 
-2）执行 `sql/create_table.sql` 中的数据库语句，自动创建库表
+### 3. Run the app
 
-3）启动项目，访问 `http://localhost:8101/api/doc.html` 即可打开接口文档，不需要写前端就能在线调试接口了~
+```bash
+# Maven wrapper (no local Maven needed)
+./mvnw spring-boot:run
 
-![](doc/swagger.png)
-
-### Redis 分布式登录
-
-1）修改 `application.yml` 的 Redis 配置为你自己的：
-
-```yml
-spring:
-  redis:
-    database: 1
-    host: localhost
-    port: 6379
-    timeout: 5000
-    password: 123456
+# — or build a jar
+./mvnw package -DskipTests
+java -jar target/springboot-init-0.0.1-SNAPSHOT.jar
 ```
 
-2）修改 `application.yml` 中的 session 存储方式：
+The service starts on **port 8101** with the base path `/api`.
 
-```yml
-spring:
-  session:
-    store-type: redis
+### 4. Open the API docs
+
+Head to <http://localhost:8101/api/doc.html> — you get a full interactive Swagger UI and can debug every endpoint without writing a frontend:
+
+![Knife4j API docs](doc/swagger.png)
+
+That's the whole happy path: database in, service up, docs live. ✅
+
+## 🧩 Optional Modules
+
+<details>
+<summary><b>Redis — distributed login</b></summary>
+
+1. Add your Redis settings to `application.yml` (uncomment the `spring.redis` block):
+
+    ```yml
+    spring:
+      redis:
+        database: 1
+        host: localhost
+        port: 6379
+        timeout: 5000
+        password: 123456
+    ```
+
+2. Enable Redis-backed sessions:
+
+    ```yml
+    spring:
+      session:
+        store-type: redis
+    ```
+
+3. Remove the `RedisAutoConfiguration` exclude in `MainApplication.java`:
+
+    ```java
+    // Before
+    @SpringBootApplication(exclude = {RedisAutoConfiguration.class})
+    // After
+    @SpringBootApplication
+    ```
+
+</details>
+
+<details>
+<summary><b>Elasticsearch — post search</b></summary>
+
+1. Configure the connection in `application.yml` (uncomment `spring.elasticsearch`):
+
+    ```yml
+    spring:
+      elasticsearch:
+        uris: http://localhost:9200
+        username: root
+        password: 123456
+    ```
+
+2. Create the `post_v1` index — paste the contents of `sql/post_es_mapping.json` into Kibana Dev Tools:
+
+    ```
+    PUT post_v1
+    {
+      // contents of sql/post_es_mapping.json
+    }
+    ```
+
+3. Enable the sync jobs by uncommenting `@Component` in `job/once/FullSyncPostToEs.java` and `job/cycle/IncSyncPostToEs.java`, then restart the app:
+
+    ```java
+    // todo uncomment to enable the job
+    @Component
+    ```
+
+</details>
+
+<details>
+<summary><b>WeChat — Official Account & Open Platform</b></summary>
+
+Fill in the `wx.mp` (Official Account) and `wx.open` (Open Platform) blocks in `application.yml` with your app's `appId`, `secret`, `token`, and `aesKey`. Message routing and subscribe-event handling are already implemented under `wxmp/`.
+
+</details>
+
+<details>
+<summary><b>Tencent COS — file upload</b></summary>
+
+Fill in the `cos.client` block in `application.yml` with your `accessKey`, `secretKey`, `region`, and `bucket`. Uploads are validated against `FileUploadBizEnum` and served by `FileController` / `CosManager`.
+
+</details>
+
+## 🐳 Docker Deployment
+
+The included multi-stage `Dockerfile` builds with Maven and runs the `prod` profile — configure `application-prod.yml` first:
+
+```bash
+docker build -t springboot-init .
+docker run -d -p 8101:8101 springboot-init
 ```
 
-3）移除 `MainApplication` 类开头 `@SpringBootApplication` 注解内的 exclude 参数：
+## 🧪 Tests
 
-修改前：
-
-```java
-@SpringBootApplication(exclude = {RedisAutoConfiguration.class})
+```bash
+./mvnw test
 ```
 
-修改后：
+`src/test` contains JUnit 5 examples for every layer: mappers, services, the COS manager, the ES dao, and EasyExcel import/export.
 
+## 🤝 Acknowledgments
 
-```java
-@SpringBootApplication
-```
+This template is based on [程序员鱼皮 (liyupi)](https://github.com/liyupi)'s [springboot-init](https://github.com/liyupi/springboot-init) from the [编程导航知识星球](https://yupi.icu). Many thanks for open-sourcing the original scaffolding! 🙏
 
-### Elasticsearch 搜索引擎
+## ⭐ Support
 
-1）修改 `application.yml` 的 Elasticsearch 配置为你自己的：
-
-```yml
-spring:
-  elasticsearch:
-    uris: http://localhost:9200
-    username: root
-    password: 123456
-```
-
-2）复制 `sql/post_es_mapping.json` 文件中的内容，通过调用 Elasticsearch 的接口或者 Kibana Dev Tools 来创建索引（相当于数据库建表）
-
-```
-PUT post_v1
-{
- 参数见 sql/post_es_mapping.json 文件
-}
-```
-
-这步不会操作的话需要补充下 Elasticsearch 的知识，或者自行百度一下~
-
-3）开启同步任务，将数据库的帖子同步到 Elasticsearch
-
-找到 job 目录下的 `FullSyncPostToEs` 和 `IncSyncPostToEs` 文件，取消掉 `@Component` 注解的注释，再次执行程序即可触发同步：
-
-```java
-// todo 取消注释开启任务
-//@Component
-```
+If this template saved you setup time, consider giving the repo a star — it helps other developers find it.
